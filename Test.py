@@ -10,8 +10,7 @@ def test(funcs, args_expects, copy_parameters=True):
     for func in funcs:
         correct = True
         for args, expect in args_expects:
-            if copy_parameters:
-                args = copy.deepcopy(args)
+            original_args = copy.deepcopy(args) if copy_parameters else args
             spec_args = inspect.getargspec(func).args
             spec_args_count = len(spec_args) - (1 if len(spec_args) > 0 and spec_args[0] == 'self' else 0)
             if type(args) in (list, tuple) and len(args) > 1 and len(args) == spec_args_count:
@@ -24,8 +23,12 @@ def test(funcs, args_expects, copy_parameters=True):
                 result = list(result)
             if expect != result:
                 correct = False
-                print("When calling {} with input '{}', '{}' is expected but got '{}'".format(
-                    func_name(func), args, expect, result))
+                print("When calling {func_name} with '{input}', '{expect}' is expected but got '{result}'".format(
+                    func_name=func_name(func),
+                    input=original_args,
+                    expect=expect,
+                    result=result,
+                ))
         if correct:
             print(func_name(func) + ' OK!')
 
