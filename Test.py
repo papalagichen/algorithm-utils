@@ -9,8 +9,8 @@ def test(funcs, args_expects, copy_parameters=True):
         funcs = [funcs]
     for func in funcs:
         correct = True
-        for args, expect in args_expects:
-            original_args = copy.deepcopy(args) if copy_parameters else args
+        for original_args, expect in args_expects:
+            args = copy.deepcopy(original_args) if copy_parameters else original_args
             spec_args = inspect.getargspec(func).args
             spec_args_count = len(spec_args) - (1 if len(spec_args) > 0 and spec_args[0] == 'self' else 0)
             if type(args) in (list, tuple) and len(args) > 1 and len(args) == spec_args_count:
